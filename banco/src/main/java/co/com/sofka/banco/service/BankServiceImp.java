@@ -1,7 +1,7 @@
 package co.com.sofka.banco.service;
 
 import co.com.sofka.banco.model.entity.Bank;
-import co.com.sofka.banco.repository.IBanco;
+import co.com.sofka.banco.repository.BankRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +11,10 @@ import java.util.List;
 @AllArgsConstructor
 public class BankServiceImp implements IBankService {
 
-    private final IBanco bankRepository;
+    private final BankRepository repository;
 
     @Override
     public List<Bank> getAll() {
-        return bankRepository.getAll();
+        return repository.getAll();
     }
 }

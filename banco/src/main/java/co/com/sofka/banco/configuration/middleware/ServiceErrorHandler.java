@@ -2,12 +2,14 @@ package co.com.sofka.banco.configuration.middleware;
 
 
 import co.com.sofka.banco.controller.model.response.GenericResponse;
+import co.com.sofka.banco.model.commons.ErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -32,6 +34,19 @@ public class ServiceErrorHandler {
     @ExceptionHandler(value = {NoSuchElementException.class})
     public ResponseEntity<Object> noSuchElementException(NoSuchElementException ex, WebRequest request) {
         return new ResponseEntity<>(GenericResponse.<String>builder().bodyOut(ex.getMessage()).code(HttpStatus.BAD_REQUEST.value()).message("Error"), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AccountNotExistException.class)
+    public final ResponseEntity<Object> handleAccountNotExistException(AccountNotExistException ex, WebRequest request) {
+        ErrorMessage errorMessage = new ErrorMessage(new Date(), HttpStatus.NOT_FOUND.toString(), ex.getMessage());
+        return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+
+    @ExceptionHandler(AccountNotHaveBalanceException.class)
+    public final ResponseEntity<Object> handleAccountNotHaveBalanceException(AccountNotHaveBalanceException ex, WebRequest request) {
+        ErrorMessage errorMessage = new ErrorMessage(new Date(), HttpStatus.NOT_FOUND.toString(), ex.getMessage());
+        return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NotFoundException.class)

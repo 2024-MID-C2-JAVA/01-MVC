@@ -1,10 +1,8 @@
 package co.com.sofka.banco.repository;
 
-import org.springframework.data.domain.Page;
-
 import java.util.List;
 
-public interface IBanco<T> {
+public interface IGenericFuntion<T> {
 
     T update(T item);
     T save(T item);

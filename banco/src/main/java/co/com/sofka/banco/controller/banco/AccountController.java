@@ -1,8 +1,8 @@
 package co.com.sofka.banco.controller.banco;
 
 import co.com.sofka.banco.controller.model.response.GenericResponse;
-import co.com.sofka.banco.model.entity.Bank;
-import co.com.sofka.banco.service.IBankService;
+import co.com.sofka.banco.model.entity.Account;
+import co.com.sofka.banco.service.IAccountService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,18 +17,18 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/bank")
+@RequestMapping("/account")
 @AllArgsConstructor
-public class BankController {
+public class AccountController {
 
-    private static final Logger logger = LoggerFactory.getLogger(BankController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
-    private final IBankService bankService;
+    private final IAccountService service;
 
     @GetMapping("/all")
-    public ResponseEntity<GenericResponse<List<Bank>>> getAll() {
+    public ResponseEntity<GenericResponse<List<Account>>> getAll() {
         logger.info("Buscando todos los bancos");
-        return new ResponseEntity<>( GenericResponse.<List<Bank>>builder().bodyOut(bankService.getAll())
+        return new ResponseEntity<>( GenericResponse.<List<Account>>builder().bodyOut(service.getAll())
                 .message("Bancos encontrados").code(HttpStatus.OK.value())
                 .build(), HttpStatus.OK);
     }

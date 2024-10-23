@@ -1,7 +1,7 @@
 package co.com.sofka.banco.repository;
 
 import co.com.sofka.banco.model.entity.Bank;
-import co.com.sofka.banco.repository.jpa.JpaBancoRepository;
+import co.com.sofka.banco.repository.jpa.JpaBankRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -9,38 +9,41 @@ import java.util.List;
 
 @Repository
 @AllArgsConstructor
-public class BancoRepository implements IBanco<Bank> {
+public class BankRepository implements IGenericFuntion<Bank> {
 
-    private final JpaBancoRepository jpaBancoRepository;
+    private final JpaBankRepository repository;
 
 
     @Override
     public Bank update(Bank item) {
-        return null;
+        return repository.save(item);
     }
 
     @Override
     public Bank save(Bank item) {
-        return null;
+        return repository.save(item);
     }
 
     @Override
     public Bank delete(Bank item) {
-        return null;
+        item.setIsActive(false);
+        repository.save(item);
+        return item;
     }
 
     @Override
     public Bank findById(Long id) {
-        return null;
+        return repository.findById(id).orElse(null);
     }
 
     @Override
     public Long deleteByElementId(Long id) {
-        return 0L;
+        repository.deleteById(id);
+        return id;
     }
 
     @Override
     public List<Bank> getAll() {
-        return jpaBancoRepository.findAll();
+        return repository.findAll();
     }
 }
