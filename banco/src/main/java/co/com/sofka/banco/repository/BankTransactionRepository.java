@@ -1,7 +1,6 @@
 package co.com.sofka.banco.repository;
 
 import co.com.sofka.banco.model.entity.BankTransaction;
-import co.com.sofka.banco.repository.jpa.JpaBankRepository;
 import co.com.sofka.banco.repository.jpa.JpaBankTransactionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;

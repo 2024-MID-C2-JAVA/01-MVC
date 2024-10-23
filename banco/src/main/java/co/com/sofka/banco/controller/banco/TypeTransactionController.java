@@ -1,11 +1,8 @@
 package co.com.sofka.banco.controller.banco;
 
 import co.com.sofka.banco.controller.model.response.GenericResponse;
-import co.com.sofka.banco.model.entity.Bank;
 import co.com.sofka.banco.model.entity.TypeTransaction;
-import co.com.sofka.banco.service.BankServiceImp;
 import co.com.sofka.banco.service.ITypeTransactionService;
-import co.com.sofka.banco.service.TypeTransactionServiceImp;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

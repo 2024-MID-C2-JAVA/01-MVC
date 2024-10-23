@@ -67,7 +67,6 @@ public class BankTransactionServiceImp implements IBankTransactionService {
 
         bankTransaction1.setTypeTransaction(typeTransaction);
         bankTransaction1.setCreatedAt(new Date(System.currentTimeMillis()));
-        BankTransaction save = repository.save(bankTransaction1);
-        return save;
+        return repository.save(bankTransaction1);
     }
 }
