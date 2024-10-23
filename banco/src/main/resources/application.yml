@@ -42,28 +42,6 @@ spring:
 liquibase:
   change-log: classpath:db/changelog/db.changelog-master.yaml
 
-messages:
-  codenotfound: "-1"
-  messagenotfoud: "No se encontro información para mostrar"
-  codeok: "0"
-  messageok: "Operacion ejecutada con éxito"
-  codduplicateversion: "-2"
-  messageduplicaversion: "Ya existe una version con esa infomación"
-  codduplicatestate: "-3"
-  messageduplicatestate: "No es posible tener dos versiones habilitadas"
-  codnotexistuserterm: "-999"
-  messagenotexistuserterm: "No existen registros para modificar"
-  codbadaceptedtermcondition: "-4"
-  messagebadtermcondition: "No se puede aceptar dos veces la misma version de temrinos y condiciones"
-  messagecodeexistpublishitem: "-5"
-  messageexistpublishitem: "Existen terminos&condiciones ó piliticas que se ecuentran publicadas"
-  healthapp: "1"
-  isactiveintegration: "1"
-  messagecodeexistcontent: "-6"
-  messageexistcontent: "Ya existe un documento con este contenido"
-
-
-
 
 logging:
   level:

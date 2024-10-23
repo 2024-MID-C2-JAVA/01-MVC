@@ -49,6 +49,12 @@ public class ServiceErrorHandler {
         return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(TypeOfBuysNotExistException.class)
+    public final ResponseEntity<Object> handleTypeOfBuysNotExistException(TypeOfBuysNotExistException ex, WebRequest request) {
+        ErrorMessage errorMessage = new ErrorMessage(new Date(), HttpStatus.NOT_FOUND.toString(), ex.getMessage());
+        return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(NotFoundException.class)
     public final ResponseEntity<Object> handleFilesNotFoundException(NotFoundException ex, WebRequest request) {
         return new ResponseEntity<>(GenericResponse.<String>builder().bodyOut(ex.getMessage()).code(HttpStatus.NOT_FOUND.value()).message("Error"), HttpStatus.NOT_FOUND);

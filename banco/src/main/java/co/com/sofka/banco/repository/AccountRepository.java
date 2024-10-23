@@ -45,7 +45,12 @@ public class AccountRepository implements IGenericFuntion<Account>, IAccount {
     }
 
     @Override
-    public Account findByNumber(String accountNumber,String pin) {
+    public Account findByNumberAndPing(String accountNumber,String pin) {
         return repository.findByNumberAndPin(accountNumber,pin);
+    }
+
+    @Override
+    public Account findByNumber(String accountNumber) {
+        return repository.findByNumber(accountNumber);
     }
 }

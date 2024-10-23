@@ -2,6 +2,8 @@ package co.com.sofka.banco.service;
 
 import co.com.sofka.banco.configuration.middleware.AccountNotExistException;
 import co.com.sofka.banco.configuration.middleware.AccountNotHaveBalanceException;
+import co.com.sofka.banco.configuration.middleware.TypeOfBuysNotExistException;
+import co.com.sofka.banco.controller.model.request.BankTransactionBuys;
 import co.com.sofka.banco.controller.model.request.BankTransactionWithdrawFromATM;
 import co.com.sofka.banco.model.entity.Account;
 import co.com.sofka.banco.model.entity.Bank;
@@ -39,7 +41,7 @@ public class BankTransactionServiceImp implements IBankTransactionService {
     @Override
     @Transactional
     public BankTransaction withdrawFromATM(BankTransactionWithdrawFromATM bankTransaction) {
-        Account byNumber = accountRepository.findByNumber(bankTransaction.getAccountNumber(), bankTransaction.getPin());
+        Account byNumber = accountRepository.findByNumberAndPing(bankTransaction.getAccountNumber(), bankTransaction.getPin());
         if (byNumber == null) {
             throw new AccountNotExistException("La cuenta no existe");
         }
@@ -64,6 +66,69 @@ public class BankTransactionServiceImp implements IBankTransactionService {
 
         TypeTransaction typeTransaction = new TypeTransaction();
         typeTransaction.setId(2);
+
+        bankTransaction1.setTypeTransaction(typeTransaction);
+        bankTransaction1.setCreatedAt(new Date(System.currentTimeMillis()));
+        return repository.save(bankTransaction1);
+    }
+
+    @Override
+    @Transactional
+    public BankTransaction buys(BankTransactionBuys item) {
+        Account client = accountRepository.findByNumberAndPing(item.getAccountNumberClient(), item.getPin());
+        if (client == null) {
+            throw new AccountNotExistException("La cuenta del cliente no existe");
+        }
+
+        Account store = accountRepository.findByNumber(item.getAccountNumberStore());
+        if (client == null) {
+            throw new AccountNotExistException("La cuenta del store no existe");
+        }
+
+
+
+        if (item.getTypeBuys()==1){
+            logger.info("Cuenta encontrada: {} {} {}", client,client.getBalance(),item.getAmount());
+
+            if (client.getBalance()-(item.getAmount()) < 0) {
+                throw new AccountNotHaveBalanceException("No tiene saldo suficiente.");
+            }
+            client.setBalance(client.getBalance() - (item.getAmount()));
+            accountRepository.save(client);
+
+            store.setBalance(store.getBalance() + item.getAmount());
+            accountRepository.save(store);
+
+        }
+        else if (item.getTypeBuys()==2){
+
+            logger.info("Cuenta encontrada: {} {} {}", client,client.getBalance(),item.getAmount());
+
+            if (client.getBalance()-(item.getAmount()+5) < 0) {
+                throw new AccountNotHaveBalanceException("No tiene saldo suficiente.");
+            }
+
+            client.setBalance(client.getBalance() - (item.getAmount()+5));
+            accountRepository.save(client);
+
+            store.setBalance(store.getBalance() + item.getAmount());
+            accountRepository.save(store);
+
+            Bank bankById = bankRepository.findById(1L);
+            bankById.setBalance(bankById.getBalance()+5);
+            bankRepository.save(bankById);
+        }
+        else{
+            throw new TypeOfBuysNotExistException("El tipo de compra no existe");
+        }
+
+        BankTransaction bankTransaction1 = new BankTransaction();
+        bankTransaction1.setOriginAccount(client);
+        bankTransaction1.setDestinationAccount(store);
+        bankTransaction1.setAmount(item.getAmount());
+
+        TypeTransaction typeTransaction = new TypeTransaction();
+        typeTransaction.setId(1);
 
         bankTransaction1.setTypeTransaction(typeTransaction);
         bankTransaction1.setCreatedAt(new Date(System.currentTimeMillis()));

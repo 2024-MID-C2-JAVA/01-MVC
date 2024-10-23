@@ -1,5 +1,6 @@
 package co.com.sofka.banco.controller.banco;
 
+import co.com.sofka.banco.controller.model.request.BankTransactionBuys;
 import co.com.sofka.banco.controller.model.request.BankTransactionWithdrawFromATM;
 import co.com.sofka.banco.controller.model.response.GenericResponse;
 import co.com.sofka.banco.model.entity.BankTransaction;
@@ -41,5 +42,16 @@ public class BankTransactionController {
                 .message("Transaccion bancaria guardada").code(HttpStatus.OK.value())
                 .build(), HttpStatus.OK);
     }
+
+
+    @PostMapping("/buys")
+    public ResponseEntity<GenericResponse<BankTransaction>> bankTransactionBuys(@Valid @RequestBody BankTransactionBuys item) {
+        logger.info("Guardando transaccion bancaria");
+        return new ResponseEntity<>( GenericResponse.<BankTransaction>builder().bodyOut(service.buys(item))
+                .message("Transaccion bancaria guardada").code(HttpStatus.OK.value())
+                .build(), HttpStatus.OK);
+    }
+
+
 
 }
