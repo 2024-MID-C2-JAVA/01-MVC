@@ -15,7 +15,8 @@ public class InMemoryFeesRepository implements FeesRepository {
                     TransactionType.ATM_DEPOSIT, new BigDecimal("-2.00"),
                     TransactionType.EXTERNAL_DEPOSIT, new BigDecimal("-1.50"),
                     TransactionType.PHYSICAL_PURCHASE, BigDecimal.ZERO,
-                    TransactionType.ONLINE_PURCHASE, new BigDecimal("-5.00")
+                    TransactionType.ONLINE_PURCHASE, new BigDecimal("-5.00"),
+                    TransactionType.ATM_WITHDRAWAL, new BigDecimal("-1.00")
             )
     );
 
@@ -26,7 +27,8 @@ public class InMemoryFeesRepository implements FeesRepository {
                     TransactionType.ATM_DEPOSIT, "Deposit from ATM",
                     TransactionType.EXTERNAL_DEPOSIT, "Deposit from external account",
                     TransactionType.PHYSICAL_PURCHASE, "Purchase in physical store",
-                    TransactionType.ONLINE_PURCHASE, "Purchase in online store"
+                    TransactionType.ONLINE_PURCHASE, "Purchase in online store",
+                    TransactionType.ATM_WITHDRAWAL, "ATM Withdrawal"
             )
     );
 

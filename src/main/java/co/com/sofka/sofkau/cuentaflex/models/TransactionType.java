@@ -6,5 +6,6 @@ public enum TransactionType {
     ATM_DEPOSIT,
     EXTERNAL_DEPOSIT,
     PHYSICAL_PURCHASE,
-    ONLINE_PURCHASE
+    ONLINE_PURCHASE,
+    ATM_WITHDRAWAL
 }

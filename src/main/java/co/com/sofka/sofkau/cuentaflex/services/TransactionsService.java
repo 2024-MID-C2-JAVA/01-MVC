@@ -25,23 +25,27 @@ public class TransactionsService {
     }
 
     public TransactionDoneResponseDto processBranchDeposit(BigDecimal amount) {
-        return processDeposit(amount, TransactionType.BRANCH_DEPOSIT);
+        return processTransaction(amount, TransactionType.BRANCH_DEPOSIT);
     }
 
     public TransactionDoneResponseDto processAtmDeposit(BigDecimal amount) {
-        return processDeposit(amount, TransactionType.ATM_DEPOSIT);
+        return processTransaction(amount, TransactionType.ATM_DEPOSIT);
     }
 
     public TransactionDoneResponseDto processExternalDeposit(BigDecimal amount) {
-        return processDeposit(amount, TransactionType.EXTERNAL_DEPOSIT);
+        return processTransaction(amount, TransactionType.EXTERNAL_DEPOSIT);
     }
 
     public TransactionDoneResponseDto processPhysicalPurchase(BigDecimal amount) {
-        return processDeposit(amount.abs().negate(), TransactionType.PHYSICAL_PURCHASE);
+        return processTransaction(amount.abs().negate(), TransactionType.PHYSICAL_PURCHASE);
     }
 
     public TransactionDoneResponseDto processOnlinePurchase(BigDecimal amount) {
-        return processDeposit(amount.abs().negate(), TransactionType.ONLINE_PURCHASE);
+        return processTransaction(amount.abs().negate(), TransactionType.ONLINE_PURCHASE);
+    }
+
+    public TransactionDoneResponseDto processAtmWithdrawal(BigDecimal amount) {
+        return processTransaction(amount.abs().negate(), TransactionType.ATM_WITHDRAWAL);
     }
 
     private void applyTransactionToAccount(Account account, BigDecimal amount, TransactionType transactionType, String description) {
@@ -55,7 +59,7 @@ public class TransactionsService {
         account.addTransaction(transaction);
     }
 
-    private TransactionDoneResponseDto processDeposit(BigDecimal amount, TransactionType transactionType) {
+    private TransactionDoneResponseDto processTransaction(BigDecimal amount, TransactionType transactionType) {
         BigDecimal fee = this.feesRepository.getFeeValueByTransactionType(transactionType);
 
         if (amount.compareTo(BigDecimal.ZERO) > 0 && fee.abs().compareTo(amount) > 0) {
