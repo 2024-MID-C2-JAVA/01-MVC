@@ -3,8 +3,7 @@ package co.com.sofka.banco.service;
 import co.com.sofka.banco.configuration.middleware.AccountNotExistException;
 import co.com.sofka.banco.configuration.middleware.AccountNotHaveBalanceException;
 import co.com.sofka.banco.configuration.middleware.TypeOfBuysNotExistException;
-import co.com.sofka.banco.controller.model.request.BankTransactionBuys;
-import co.com.sofka.banco.controller.model.request.BankTransactionWithdrawFromATM;
+import co.com.sofka.banco.controller.model.request.*;
 import co.com.sofka.banco.model.entity.Account;
 import co.com.sofka.banco.model.entity.Bank;
 import co.com.sofka.banco.model.entity.BankTransaction;
@@ -65,7 +64,7 @@ public class BankTransactionServiceImp implements IBankTransactionService {
         bankTransaction1.setAmount(bankTransaction.getAmount());
 
         TypeTransaction typeTransaction = new TypeTransaction();
-        typeTransaction.setId(2);
+        typeTransaction.setId(3);
 
         bankTransaction1.setTypeTransaction(typeTransaction);
         bankTransaction1.setCreatedAt(new Date(System.currentTimeMillis()));
@@ -81,7 +80,7 @@ public class BankTransactionServiceImp implements IBankTransactionService {
         }
 
         Account store = accountRepository.findByNumber(item.getAccountNumberStore());
-        if (client == null) {
+        if (store == null) {
             throw new AccountNotExistException("La cuenta del store no existe");
         }
 
@@ -121,6 +120,96 @@ public class BankTransactionServiceImp implements IBankTransactionService {
         else{
             throw new TypeOfBuysNotExistException("El tipo de compra no existe");
         }
+
+        BankTransaction bankTransaction1 = new BankTransaction();
+        bankTransaction1.setOriginAccount(client);
+        bankTransaction1.setDestinationAccount(store);
+        bankTransaction1.setAmount(item.getAmount());
+
+        TypeTransaction typeTransaction = new TypeTransaction();
+        typeTransaction.setId(2);
+
+        bankTransaction1.setTypeTransaction(typeTransaction);
+        bankTransaction1.setCreatedAt(new Date(System.currentTimeMillis()));
+        return repository.save(bankTransaction1);
+    }
+
+    @Override
+    public BankTransaction depositSucursal(BankTransactionDepositSucursal item) {
+
+        Account client = accountRepository.findByNumber(item.getAccountNumberClient());
+        if (client == null) {
+            throw new AccountNotExistException("La cuenta del store no existe");
+        }
+
+        client.setBalance(client.getBalance() + (item.getAmount()));
+        accountRepository.save(client);
+
+        BankTransaction bankTransaction1 = new BankTransaction();
+        bankTransaction1.setOriginAccount(client);
+        bankTransaction1.setDestinationAccount(client);
+        bankTransaction1.setAmount(item.getAmount());
+
+        TypeTransaction typeTransaction = new TypeTransaction();
+        typeTransaction.setId(1);
+
+        bankTransaction1.setTypeTransaction(typeTransaction);
+        bankTransaction1.setCreatedAt(new Date(System.currentTimeMillis()));
+        return repository.save(bankTransaction1);
+    }
+
+    @Override
+    public BankTransaction depositCajero(BankTransactionDepositCajero item) {
+        Account client = accountRepository.findByNumberAndPing(item.getAccountNumberClient(), item.getPin());
+        if (client == null) {
+            throw new AccountNotExistException("La cuenta del cliente no es valida");
+        }
+
+        client.setBalance(client.getBalance() + (item.getAmount()-2));
+        accountRepository.save(client);
+
+        Bank bankById = bankRepository.findById(1L);
+        bankById.setBalance(bankById.getBalance()+2);
+        bankRepository.save(bankById);
+
+        BankTransaction bankTransaction1 = new BankTransaction();
+        bankTransaction1.setOriginAccount(client);
+        bankTransaction1.setDestinationAccount(client);
+        bankTransaction1.setAmount(item.getAmount());
+
+        TypeTransaction typeTransaction = new TypeTransaction();
+        typeTransaction.setId(1);
+
+        bankTransaction1.setTypeTransaction(typeTransaction);
+        bankTransaction1.setCreatedAt(new Date(System.currentTimeMillis()));
+        return repository.save(bankTransaction1);
+    }
+
+    @Override
+    public BankTransaction depositTrasferencia(BankTransactionDepositTransfer item) {
+        Account client = accountRepository.findByNumberAndPing(item.getAccountNumberSender(), item.getPin());
+        if (client == null) {
+            throw new AccountNotExistException("La cuenta del cliente no es valida.");
+        }
+
+        Account store = accountRepository.findByNumber(item.getAccountNumberReceiver());
+        if (client == null) {
+            throw new AccountNotExistException("La cuenta del cliente no existe.");
+        }
+
+        if (client.getBalance()-(item.getAmount()) < 0) {
+            throw new AccountNotHaveBalanceException("No tiene saldo suficiente.");
+        }
+
+        client.setBalance(client.getBalance() - item.getAmount());
+        accountRepository.save(client);
+
+        store.setBalance(client.getBalance() + (item.getAmount()-1.5));
+        accountRepository.save(store);
+
+        Bank bankById = bankRepository.findById(1L);
+        bankById.setBalance(bankById.getBalance()+1.5);
+        bankRepository.save(bankById);
 
         BankTransaction bankTransaction1 = new BankTransaction();
         bankTransaction1.setOriginAccount(client);

@@ -1,7 +1,6 @@
 package co.com.sofka.banco.controller.banco;
 
-import co.com.sofka.banco.controller.model.request.BankTransactionBuys;
-import co.com.sofka.banco.controller.model.request.BankTransactionWithdrawFromATM;
+import co.com.sofka.banco.controller.model.request.*;
 import co.com.sofka.banco.controller.model.response.GenericResponse;
 import co.com.sofka.banco.model.entity.BankTransaction;
 import co.com.sofka.banco.service.IBankTransactionService;
@@ -48,6 +47,35 @@ public class BankTransactionController {
     public ResponseEntity<GenericResponse<BankTransaction>> bankTransactionBuys(@Valid @RequestBody BankTransactionBuys item) {
         logger.info("Guardando transaccion bancaria");
         return new ResponseEntity<>( GenericResponse.<BankTransaction>builder().bodyOut(service.buys(item))
+                .message("Transaccion bancaria guardada").code(HttpStatus.OK.value())
+                .build(), HttpStatus.OK);
+    }
+
+
+
+
+    @PostMapping("/deposit")
+    public ResponseEntity<GenericResponse<BankTransaction>> bankTransactionDeposit(@Valid @RequestBody BankTransactionDepositSucursal item) {
+        logger.info("Guardando transaccion bancaria");
+        return new ResponseEntity<>( GenericResponse.<BankTransaction>builder().bodyOut(service.depositSucursal(item))
+                .message("Transaccion bancaria guardada").code(HttpStatus.OK.value())
+                .build(), HttpStatus.OK);
+    }
+
+
+    @PostMapping("/depositCajero")
+    public ResponseEntity<GenericResponse<BankTransaction>> bankTransactionDepositCajero(@Valid @RequestBody BankTransactionDepositCajero item) {
+        logger.info("Guardando transaccion bancaria");
+        return new ResponseEntity<>( GenericResponse.<BankTransaction>builder().bodyOut(service.depositCajero(item))
+                .message("Transaccion bancaria guardada").code(HttpStatus.OK.value())
+                .build(), HttpStatus.OK);
+    }
+
+
+    @PostMapping("/depositTrasfer")
+    public ResponseEntity<GenericResponse<BankTransaction>> bankTransactionDepositTrasfer(@Valid @RequestBody BankTransactionDepositTransfer item) {
+        logger.info("Guardando transaccion bancaria");
+        return new ResponseEntity<>( GenericResponse.<BankTransaction>builder().bodyOut(service.depositTrasferencia(item))
                 .message("Transaccion bancaria guardada").code(HttpStatus.OK.value())
                 .build(), HttpStatus.OK);
     }
